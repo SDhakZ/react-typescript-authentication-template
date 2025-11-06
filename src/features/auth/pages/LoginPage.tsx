@@ -16,9 +16,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useLoginMutation } from "../authApi";
 import { loginSuccess } from "../authSlice";
 import { useAppDispatch } from "@/hooks/hooks";
+import { toast } from "sonner";
 export default function LoginPage() {
   const [login, { isLoading, error }] = useLoginMutation();
-  console.log("Login error:", error);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const {
@@ -40,13 +40,17 @@ export default function LoginPage() {
         password: data.password,
         rememberMe: data.rememberMe,
       }).unwrap();
-
+      toast.success("Login successful!");
       dispatch(loginSuccess(res.data.user));
-
-      console.log("✅ Logged in:", res.data.user);
       navigate("/dashboard");
     } catch (err) {
-      console.error("❌ Login failed:", err);
+      let error = err as any;
+      console.log("Login error:", error.data.message);
+      if (error?.data?.message === "Invalid email or password") {
+        console.log("Showing toast for invalid credentials");
+      } else {
+        toast.error("Login failed. Please try again.");
+      }
     }
   };
 
