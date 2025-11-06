@@ -48,7 +48,7 @@ export default function LoginPage() {
       );
 
       dispatch(loginSuccess(res.data.user));
-      navigate("/dashboard");
+      navigate("/client-list");
     } catch (err) {
       let error = err as any;
       console.log("Login error:", error.data.message);

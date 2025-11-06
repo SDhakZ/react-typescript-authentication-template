@@ -1,14 +1,5 @@
-export interface BaseResponse {
-  success: boolean;
-  message: string;
-}
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-}
+import type { BaseResponse } from "@/types/api";
+import type { User } from "@/types/user";
 
 export interface LoginResponse extends BaseResponse {
   accessToken: string;

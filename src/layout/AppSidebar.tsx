@@ -97,11 +97,11 @@ export function AppSidebar() {
               >
                 <DropdownMenuItem asChild>
                   <NavLink
-                    to="/settings"
+                    to="/profile"
                     className="w-full h-full font-semibold text-center cursor-pointer"
                   >
                     <Settings />
-                    Settings
+                    Profile
                   </NavLink>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleSignOut}>
