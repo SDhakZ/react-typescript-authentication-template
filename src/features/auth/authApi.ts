@@ -1,16 +1,10 @@
 import { api } from "@/app/api/baseApi";
+import type { LoginInput } from "./authSchema";
+import type { LoginResponse, LogoutResponse } from "./authTypes";
 
 export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    login: builder.mutation<
-      {
-        accessToken: string;
-        data: {
-          user: { id: string; name: string; role: string; email: string };
-        };
-      },
-      { email: string; password: string; rememberMe?: boolean }
-    >({
+    login: builder.mutation<LoginResponse, LoginInput>({
       query: (body) => ({
         url: "/auth/login",
         method: "POST",
@@ -28,7 +22,7 @@ export const authApi = api.injectEndpoints({
       },
     }),
 
-    logout: builder.mutation<void, void>({
+    logout: builder.mutation<LogoutResponse, void>({
       query: () => ({
         url: "/auth/logout",
         method: "POST",
