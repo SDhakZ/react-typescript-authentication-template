@@ -8,6 +8,5 @@ export default function ProfilePage() {
     return <div>Loading...</div>;
   }
   const user = useAppSelector((state) => state.profile.user);
-  console.log("ProfilePage user:", user);
   return <div>ProfilePage: {user?.email}</div>;
 }
