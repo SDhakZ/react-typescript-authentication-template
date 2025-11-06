@@ -17,4 +17,10 @@ export interface LoginResponse extends BaseResponse {
   };
 }
 
+export interface RegisterResponse extends BaseResponse {
+  data: {
+    user: User;
+  };
+}
+
 export interface LogoutResponse extends BaseResponse {}

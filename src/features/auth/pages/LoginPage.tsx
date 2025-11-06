@@ -17,7 +17,8 @@ import { useLoginMutation } from "../authApi";
 import { loginSuccess } from "../authSlice";
 import { useAppDispatch } from "@/hooks/hooks";
 export default function LoginPage() {
-  const [login, { isLoading }] = useLoginMutation();
+  const [login, { isLoading, error }] = useLoginMutation();
+  console.log("Login error:", error);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const {
@@ -91,6 +92,12 @@ export default function LoginPage() {
                 )}
               />
             </Field>
+
+            {error && (
+              <p className="text-red-500">
+                {(error as any).data?.message || "Something went wrong"}
+              </p>
+            )}
 
             <Button disabled={isLoading} type="submit" className="mt-4 w-full">
               {isLoading ? "Loading..." : "Login"}

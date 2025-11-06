@@ -1,6 +1,10 @@
 import { api } from "@/app/api/baseApi";
-import type { LoginInput } from "./authSchema";
-import type { LoginResponse, LogoutResponse } from "./authTypes";
+import type { LoginInput, RegisterInput } from "./authSchema";
+import {
+  type RegisterResponse,
+  type LoginResponse,
+  type LogoutResponse,
+} from "./authTypes";
 
 export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -20,6 +24,14 @@ export const authApi = api.injectEndpoints({
           console.error("Login failed", error);
         }
       },
+    }),
+
+    register: builder.mutation<RegisterResponse, RegisterInput>({
+      query: (body) => ({
+        url: "/auth/register",
+        method: "POST",
+        body,
+      }),
     }),
 
     logout: builder.mutation<LogoutResponse, void>({
