@@ -40,7 +40,13 @@ export default function LoginPage() {
         password: data.password,
         rememberMe: data.rememberMe,
       }).unwrap();
-      toast.success("Login successful!");
+      toast.success(
+        <span>
+          Successfully logged in as{" "}
+          <span className="text-sky-600 font-medium">{data.email}</span>
+        </span>
+      );
+
       dispatch(loginSuccess(res.data.user));
       navigate("/dashboard");
     } catch (err) {
@@ -55,8 +61,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-gray-50">
-      <div className="w-full max-w-md bg-white rounded-lg shadow p-6">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-gray-900">
+      <div className="w-full max-w-md  bg-white rounded-lg shadow p-6">
         <h1 className="text-2xl font-semibold mb-4">Login</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <FieldGroup>

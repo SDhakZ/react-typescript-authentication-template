@@ -22,7 +22,6 @@ export default function UserPage() {
   return (
     <div>
       <p>User Page: {user ? user.name : "Guest"}</p>
-      <button onClick={onLogout}>Logout</button>
     </div>
   );
 }
