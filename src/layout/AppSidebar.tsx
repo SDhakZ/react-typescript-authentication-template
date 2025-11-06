@@ -17,26 +17,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { logoutSuccess } from "@/features/auth/authSlice";
 import { useLogoutMutation } from "@/features/auth/authApi";
-import {
-  LayoutList,
-  User2,
-  FileChartLine,
-  ChevronUp,
-  Settings,
-  LogOut,
-} from "lucide-react";
+import { LayoutList, User2, ChevronUp, Settings, LogOut } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { useNavigate, NavLink, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 // --- Menu items ---
-const items = [
-  { title: "Client List", url: "/client-list", icon: LayoutList },
-  {
-    title: "Summary Metrics",
-    url: "/summary-metrics",
-    icon: FileChartLine,
-  },
-];
+const items = [{ title: "Client List", url: "/client-list", icon: LayoutList }];
 
 export function AppSidebar() {
   const { open } = useSidebar();
@@ -111,11 +97,11 @@ export function AppSidebar() {
               >
                 <DropdownMenuItem asChild>
                   <NavLink
-                    to="/organization-settings"
+                    to="/settings"
                     className="w-full h-full font-semibold text-center cursor-pointer"
                   >
                     <Settings />
-                    Organization
+                    Settings
                   </NavLink>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleSignOut}>
