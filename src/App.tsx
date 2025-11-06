@@ -3,11 +3,9 @@ import { useGetProfileQuery } from "./features/profile/profileApi";
 
 function App() {
   const token = sessionStorage.getItem("accessToken");
-  const { isLoading } = useGetProfileQuery(undefined, {
+  useGetProfileQuery(undefined, {
     skip: !token,
   });
-
-  if (isLoading) return <p>Loading...</p>;
 
   return <AppRoutes />;
 }
