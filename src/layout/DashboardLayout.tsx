@@ -4,6 +4,7 @@ import { AppSidebar } from "./AppSidebar";
 import { BreadcrumbNav } from "./BreadcrumbNav";
 import { Outlet } from "react-router-dom";
 import { LucideRefreshCw } from "lucide-react";
+import { ModeToggle } from "@/components/mode-toggle";
 
 export default function DashboardLayout() {
   const [isSpinning, setIsSpinning] = useState(false);
@@ -21,18 +22,19 @@ export default function DashboardLayout() {
         <AppSidebar />
         <div className="flex flex-col flex-1">
           {/* Top bar with trigger and breadcrumb */}
-          <div className="flex items-center w-full gap-3 py-3 bg-white border-b">
+          <div className="flex items-center w-full gap-3 py-3  border-b">
             <SidebarTrigger />
             <span className="text-slate-400">|</span>
+            <ModeToggle />
             <div>
               <BreadcrumbNav />
             </div>
             <button
               onClick={handleRefresh}
-              className="flex cursor-pointer items-center justify-center gap-2 px-2 py-1 ml-auto mr-4 text-sm text-gray-600 transition-colors duration-150 border border-gray-400 rounded-full hover:bg-gray-100"
+              className="flex cursor-pointer items-center justify-center gap-2 px-2 py-1 ml-auto mr-4 text-sm text-primary transition-colors duration-150 border border-gray-400 rounded-full hover:bg-gray-100"
             >
               <LucideRefreshCw
-                className={`w-3.5 h-3.5  text-gray-600 ${
+                className={`w-3.5 h-3.5  text-primary ${
                   isSpinning ? "animate-spin" : ""
                 }`}
               />
