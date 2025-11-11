@@ -4,7 +4,10 @@ import { toast } from "sonner";
 import { useAppSelector } from "@/hooks/hooks";
 import { useGetProfileQuery } from "../profileApi";
 import { Input } from "@/components/ui/input";
-import { useChangePasswordMutation } from "../profileApi";
+import {
+  useChangePasswordMutation,
+  useUpdateProfileMutation,
+} from "../profileApi";
 import {
   Field,
   FieldGroup,
@@ -14,15 +17,18 @@ import {
   FieldSeparator,
 } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
-import type { ProfileForm, ChangePasswordForm } from "../profile";
 import {
   changePasswordSchema,
+  updateProfileSchema,
   type ChangePasswordInput,
+  type UpdateProfileInput,
 } from "../profileSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function ProfilePage() {
   const { data: profileData, isLoading } = useGetProfileQuery();
+  const [updateProfile, { isLoading: isLoadingProfile }] =
+    useUpdateProfileMutation();
   const [changePassword, { isLoading: isLoadingPwd }] =
     useChangePasswordMutation();
   const user =
@@ -34,8 +40,9 @@ export default function ProfilePage() {
     handleSubmit,
     reset: resetProfile,
     formState: { errors: profileErrors },
-  } = useForm<ProfileForm>({
+  } = useForm<UpdateProfileInput>({
     defaultValues: { name: "", email: "", role: "", id: undefined },
+    resolver: zodResolver(updateProfileSchema),
   });
 
   const {
@@ -50,21 +57,26 @@ export default function ProfilePage() {
   useEffect(() => {
     if (user) {
       resetProfile({
-        id: (user as any).id,
-        name: (user as any).name ?? "",
-        email: (user as any).email ?? "",
-        role: (user as any).role ?? "",
+        id: user.id,
+        name: user.name ?? "",
+        email: user.email ?? "",
+        role: user.role ?? "",
       });
     }
   }, [user, resetProfile]);
 
   if (isLoading) return <div className="p-6">Loading...</div>;
 
-  const onSaveProfile = (values: ProfileForm) => {
-    // TODO: call update profile API
-    console.log("Save profile (UI only)", values);
-    toast.success("Profile saved (UI-only)");
-    setEditing(false);
+  const onSaveProfile = async (values: UpdateProfileInput) => {
+    try {
+      const res = await updateProfile(values).unwrap();
+      toast.success(res.message);
+      resetProfile(values);
+      setEditing(false);
+    } catch (error) {
+      console.error("Failed to save profile", error);
+      toast.error("Failed to save profile");
+    }
   };
 
   const onChangePassword = async (values: ChangePasswordInput) => {
@@ -128,7 +140,9 @@ export default function ProfilePage() {
 
             {editing && (
               <div className="flex gap-3">
-                <Button type="submit">Save</Button>
+                <Button disabled={isLoadingProfile} type="submit">
+                  {isLoadingProfile ? "Saving..." : "Save"}
+                </Button>
                 <Button
                   variant="ghost"
                   onClick={() => {
@@ -190,7 +204,7 @@ export default function ProfilePage() {
 
               <FieldSeparator />
               <Button type="submit" disabled={isLoadingPwd}>
-                Change password
+                {isLoadingPwd ? "Changing..." : "Change Password"}
               </Button>
             </FieldGroup>
           </form>

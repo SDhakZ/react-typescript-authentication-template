@@ -6,16 +6,3 @@ export interface ProfileResponse extends BaseResponse {
     user: User;
   };
 }
-
-export type ProfileForm = {
-  id?: number;
-  name: string;
-  email: string;
-  role?: string;
-};
-
-export type ChangePasswordForm = {
-  currentPassword: string;
-  newPassword: string;
-  confirmNewPassword: string;
-};

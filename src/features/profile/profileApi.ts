@@ -1,7 +1,10 @@
 import { api } from "@/app/api/baseApi.ts";
 import type { ProfileResponse } from "./profile";
 import { setProfile } from "./profileSlice";
-import type { ChangePasswordPayload } from "./profileSchema";
+import type {
+  ChangePasswordPayload,
+  UpdateProfileInput,
+} from "./profileSchema";
 import type { BaseResponse } from "@/types/api";
 export const profileApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -26,7 +29,21 @@ export const profileApi = api.injectEndpoints({
         },
       }),
     }),
+    updateProfile: builder.mutation<ProfileResponse, UpdateProfileInput>({
+      query: (profile) => ({
+        url: "/profile",
+        method: "PATCH",
+        body: {
+          name: profile.name,
+          email: profile.email,
+        },
+      }),
+    }),
   }),
 });
 
-export const { useGetProfileQuery, useChangePasswordMutation } = profileApi;
+export const {
+  useGetProfileQuery,
+  useChangePasswordMutation,
+  useUpdateProfileMutation,
+} = profileApi;

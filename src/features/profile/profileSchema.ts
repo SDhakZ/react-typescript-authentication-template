@@ -17,3 +17,11 @@ export type ChangePasswordPayload = Omit<
   ChangePasswordInput,
   "confirmNewPassword"
 >;
+
+export const updateProfileSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters long"),
+  email: z.email("Invalid email address"),
+  id: z.number().optional(),
+  role: z.string().optional(),
+});
+export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
