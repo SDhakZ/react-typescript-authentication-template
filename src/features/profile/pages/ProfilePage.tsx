@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useAppSelector } from "@/hooks/hooks";
-import { useGetProfileQuery } from "../profileApi";
 import { Input } from "@/components/ui/input";
 import {
+  useGetProfileQuery,
   useChangePasswordMutation,
   useUpdateProfileMutation,
 } from "../profileApi";
@@ -26,13 +26,13 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function ProfilePage() {
-  const { data: profileData, isLoading } = useGetProfileQuery();
+  const { data: profileData, isLoading, refetch } = useGetProfileQuery();
   const [updateProfile, { isLoading: isLoadingProfile }] =
     useUpdateProfileMutation();
   const [changePassword, { isLoading: isLoadingPwd }] =
     useChangePasswordMutation();
-  const user =
-    useAppSelector((state) => state.profile.user) ?? (profileData as any)?.user;
+  const user = useAppSelector((s) => s.profile.user) ?? profileData?.data?.user;
+
   const [editing, setEditing] = useState(false);
 
   const {
@@ -57,7 +57,7 @@ export default function ProfilePage() {
   useEffect(() => {
     if (user) {
       resetProfile({
-        id: user.id,
+        id: Number(user.id),
         name: user.name ?? "",
         email: user.email ?? "",
         role: user.role ?? "",
@@ -70,6 +70,7 @@ export default function ProfilePage() {
   const onSaveProfile = async (values: UpdateProfileInput) => {
     try {
       const res = await updateProfile(values).unwrap();
+      refetch();
       toast.success(res.message);
       resetProfile(values);
       setEditing(false);
@@ -120,13 +121,21 @@ export default function ProfilePage() {
 
               <Field>
                 <FieldLabel htmlFor="name">Name</FieldLabel>
-                <Input id="name" {...register("name")} disabled={!editing} />
+                <Input
+                  id="name"
+                  {...register("name")}
+                  disabled={!editing || isLoadingProfile}
+                />
                 <FieldError>{profileErrors.name?.message as any}</FieldError>
               </Field>
 
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input id="email" {...register("email")} disabled={!editing} />
+                <Input
+                  id="email"
+                  {...register("email")}
+                  disabled={!editing || isLoadingProfile}
+                />
                 <FieldError>{profileErrors.email?.message as any}</FieldError>
               </Field>
 
@@ -168,6 +177,7 @@ export default function ProfilePage() {
                   </FieldLabel>
                   <Input
                     id="currentPassword"
+                    disabled={isLoadingPwd}
                     type="password"
                     {...registerPwd("currentPassword")}
                   />
@@ -179,6 +189,7 @@ export default function ProfilePage() {
                   <FieldLabel htmlFor="newPassword">New password</FieldLabel>
                   <Input
                     id="newPassword"
+                    disabled={isLoadingPwd}
                     type="password"
                     {...registerPwd("newPassword")}
                   />
@@ -193,6 +204,7 @@ export default function ProfilePage() {
                   </FieldLabel>
                   <Input
                     id="confirmNewPassword"
+                    disabled={isLoadingPwd}
                     type="password"
                     {...registerPwd("confirmNewPassword")}
                   />
