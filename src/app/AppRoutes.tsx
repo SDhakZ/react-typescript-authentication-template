@@ -5,10 +5,12 @@ import RequireAuth from "@/components/RequireAuth";
 import DashboardLayout from "@/layout/DashboardLayout";
 import SettingsPage from "@/features/profile/pages/ProfilePage";
 import ProfilePage from "@/features/profile/pages/ProfilePage";
+import OAuthSuccess from "@/features/auth/pages/OAuthSuccess";
 export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/client-list" />} />
+      <Route path="/oauth-success" element={<OAuthSuccess />} />
       <Route path="/login" element={<LoginPage />} />
       <Route element={<RequireAuth />}>
         <Route element={<DashboardLayout />}>

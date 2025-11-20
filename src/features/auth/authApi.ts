@@ -19,7 +19,6 @@ export const authApi = api.injectEndpoints({
           const { data } = await queryFulfilled;
           console.log("Login successful", data);
           sessionStorage.setItem("accessToken", data.accessToken);
-          sessionStorage.setItem("user", JSON.stringify(data.data.user));
         } catch (error) {
           console.error("Login failed", error);
         }

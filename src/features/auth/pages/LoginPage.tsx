@@ -62,7 +62,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6 bg-gray-900">
-      <div className="w-full max-w-md  bg-white rounded-lg shadow p-6">
+      <div className="w-full max-w-md rounded-lg shadow p-6">
         <h1 className="text-2xl font-semibold mb-4">Login</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <FieldGroup>
@@ -109,8 +109,23 @@ export default function LoginPage() {
               </p>
             )}
 
-            <Button disabled={isLoading} type="submit" className="mt-4 w-full">
+            <Button
+              disabled={isLoading}
+              type="submit"
+              className="mt-4 w-full dark:bg-sky-600 dark:hover:bg-sky-700 cursor-pointer"
+            >
               {isLoading ? "Loading..." : "Login"}
+            </Button>
+            <Button
+              variant="outline"
+              className="mt-4 w-full cursor-pointer"
+              onClick={() => {
+                window.location.href = `${
+                  import.meta.env.VITE_URL
+                }/auth/google`;
+              }}
+            >
+              Continue with Google
             </Button>
           </FieldGroup>
         </form>

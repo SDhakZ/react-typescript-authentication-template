@@ -9,10 +9,9 @@ const RequireAuth = () => {
 
   useEffect(() => {
     const token = sessionStorage.getItem("accessToken");
-    const storedUser = sessionStorage.getItem("user");
 
-    if (token && storedUser && !isAuthenticated) {
-      dispatch(loginSuccess(JSON.parse(storedUser)));
+    if (token && !isAuthenticated) {
+      dispatch(loginSuccess(null));
     }
   }, [dispatch, isAuthenticated]);
 
