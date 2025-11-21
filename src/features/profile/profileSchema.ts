@@ -13,9 +13,25 @@ export const changePasswordSchema = z
 
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
 
+export const addPasswordSchema = z
+  .object({
+    addPassword: z.string().min(6),
+    confirmAddNewPassword: z.string().min(6),
+  })
+  .refine((data) => data.addPassword === data.confirmAddNewPassword, {
+    message: "Passwords do not match",
+    path: ["confirmAddNewPassword"],
+  });
+export type AddPasswordInput = z.infer<typeof addPasswordSchema>;
+
 export type ChangePasswordPayload = Omit<
   ChangePasswordInput,
   "confirmNewPassword"
+>;
+
+export type AddPasswordPayload = Omit<
+  AddPasswordInput,
+  "confirmAddNewPassword"
 >;
 
 export const updateProfileSchema = z.object({

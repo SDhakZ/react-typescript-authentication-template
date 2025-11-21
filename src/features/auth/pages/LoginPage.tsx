@@ -4,6 +4,7 @@ import type { LoginInput } from "../authSchema";
 import { loginSchema } from "../authSchema";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
+import GoogleIcon from "@/components/google-icon";
 import {
   Field,
   FieldGroup,
@@ -62,7 +63,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6 bg-gray-900">
-      <div className="w-full max-w-md rounded-lg shadow p-6">
+      <div className="w-full max-w-sm rounded-lg shadow p-6">
         <h1 className="text-2xl font-semibold mb-4">Login</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <FieldGroup>
@@ -108,27 +109,35 @@ export default function LoginPage() {
                 {(error as any).data?.message || "Something went wrong"}
               </p>
             )}
-
-            <Button
-              disabled={isLoading}
-              type="submit"
-              className="mt-4 w-full dark:bg-sky-600 dark:hover:bg-sky-700 cursor-pointer"
-            >
-              {isLoading ? "Loading..." : "Login"}
-            </Button>
-            <Button
-              variant="outline"
-              className="mt-4 w-full cursor-pointer"
-              onClick={() => {
-                window.location.href = `${
-                  import.meta.env.VITE_URL
-                }/auth/google`;
-              }}
-            >
-              Continue with Google
-            </Button>
+            <div className="flex flex-col gap-4">
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="mt-4 dark:text-white w-full dark:bg-[#7C3AED] dark:hover:bg-[#6B21A8] cursor-pointer"
+              >
+                {isLoading ? "Loading..." : "Login"}
+              </Button>
+            </div>
           </FieldGroup>
         </form>
+        <div className="flex flex-col gap-4 mt-4">
+          <div className="flex items-center justify-center gap-2">
+            <hr className="grow border-t border-gray-500" />
+            <span className="text-center text-gray-500">or</span>
+            <hr className="grow border-t border-gray-500" />
+          </div>
+
+          <Button
+            type="button"
+            onClick={() => {
+              window.location.href = `${import.meta.env.VITE_URL}/auth/google`;
+            }}
+            className="flex dark:text-white dark:hover:bg-[#272729] cursor-pointer gap-2 items-center dark:bg-[#131314] justify-center border px-4 py-2 rounded-md"
+          >
+            <GoogleIcon />
+            Continue with Google
+          </Button>
+        </div>
       </div>
     </div>
   );

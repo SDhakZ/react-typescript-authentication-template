@@ -2,6 +2,7 @@ import { api } from "@/app/api/baseApi.ts";
 import type { ProfileResponse } from "./profile";
 import { setProfile } from "./profileSlice";
 import type {
+  AddPasswordPayload,
   ChangePasswordPayload,
   UpdateProfileInput,
 } from "./profileSchema";
@@ -29,6 +30,15 @@ export const profileApi = api.injectEndpoints({
         },
       }),
     }),
+    addPassword: builder.mutation<BaseResponse, AddPasswordPayload>({
+      query: (password) => ({
+        url: "/profile/add-password",
+        method: "POST",
+        body: {
+          addPassword: password.addPassword,
+        },
+      }),
+    }),
     updateProfile: builder.mutation<ProfileResponse, UpdateProfileInput>({
       query: (profile) => ({
         url: "/profile",
@@ -45,5 +55,6 @@ export const profileApi = api.injectEndpoints({
 export const {
   useGetProfileQuery,
   useChangePasswordMutation,
+  useAddPasswordMutation,
   useUpdateProfileMutation,
 } = profileApi;
