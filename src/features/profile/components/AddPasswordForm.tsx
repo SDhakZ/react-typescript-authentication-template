@@ -4,6 +4,7 @@ import { addPasswordSchema, type AddPasswordInput } from "../profileSchema";
 import { useAddPasswordMutation } from "../profileApi";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useGetProfileQuery } from "../profileApi";
 import {
   Field,
   FieldLabel,
@@ -13,7 +14,7 @@ import {
 import { toast } from "sonner";
 export default function AddPasswordForm() {
   const [addPassword, { isLoading }] = useAddPasswordMutation();
-
+  const { refetch } = useGetProfileQuery();
   const {
     register,
     handleSubmit,
@@ -26,6 +27,7 @@ export default function AddPasswordForm() {
   async function onSubmit(values: AddPasswordInput) {
     try {
       await addPassword(values).unwrap();
+      await refetch();
 
       toast.success("Password added successfully");
 
