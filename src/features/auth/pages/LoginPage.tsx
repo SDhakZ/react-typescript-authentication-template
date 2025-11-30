@@ -1,7 +1,7 @@
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { LoginInput } from "../authSchema";
-import { loginSchema } from "../authSchema";
+import type { LoginFormValues } from "../authFormSchemas";
+import { LoginFormSchema } from "../authFormSchemas";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import GoogleIcon from "@/components/google-icon";
@@ -27,14 +27,14 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginInput>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(LoginFormSchema),
     defaultValues: {
       rememberMe: false,
     },
   });
 
-  const onSubmit = async (data: LoginInput) => {
+  const onSubmit = async (data: LoginFormValues) => {
     try {
       const res = await login({
         email: data.email,

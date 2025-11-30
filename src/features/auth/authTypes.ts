@@ -8,12 +8,13 @@ export interface LoginResponse extends BaseResponse {
   };
 }
 
-export interface RegisterResponse extends BaseResponse {
-  message: string;
+export interface RequestSignupResponse extends BaseResponse {
   data: {
     email: string;
     expiresIn: number;
   };
 }
+
+export interface ResendSignupOTPResponse extends RequestSignupResponse {}
 
 export interface LogoutResponse extends BaseResponse {}

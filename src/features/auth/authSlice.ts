@@ -47,6 +47,9 @@ const authSlice = createSlice({
       state.signup.email = null;
       state.signup.expiresAt = undefined;
     },
+    resendOtpSuccess: (state, action: PayloadAction<{ expiresIn: number }>) => {
+      state.signup.expiresAt = Date.now() + action.payload.expiresIn * 1000;
+    },
     logoutSuccess: (state) => {
       state.isAuthenticated = false;
       state.user = null;
@@ -60,5 +63,6 @@ export const {
   logoutSuccess,
   requestSignupSuccess,
   verifySignupSuccess,
+  resendOtpSuccess,
 } = authSlice.actions;
 export default authSlice.reducer;

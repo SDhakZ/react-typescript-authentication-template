@@ -1,19 +1,21 @@
 import { api } from "@/app/api/baseApi";
 import type {
-  LoginInput,
-  RegisterInput,
-  RegisterPayload,
-  VerifySignupInput,
-} from "./authSchema";
-import {
-  type RegisterResponse,
-  type LoginResponse,
-  type LogoutResponse,
+  LoginPayload,
+  RequestSignupPayload,
+  VerifySignupPayload,
+  ResendSignupOTPPayload,
+} from "./authApiSchema";
+
+import type {
+  RequestSignupResponse,
+  LoginResponse,
+  LogoutResponse,
+  ResendSignupOTPResponse,
 } from "./authTypes";
 
 export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    login: builder.mutation<LoginResponse, LoginInput>({
+    login: builder.mutation<LoginResponse, LoginPayload>({
       query: (body) => ({
         url: "/auth/login",
         method: "POST",
@@ -30,7 +32,10 @@ export const authApi = api.injectEndpoints({
       },
     }),
 
-    requestSignup: builder.mutation<RegisterResponse, RegisterPayload>({
+    requestSignup: builder.mutation<
+      RequestSignupResponse,
+      RequestSignupPayload
+    >({
       query: (body) => ({
         url: "/auth/requestSignup",
         method: "POST",
@@ -38,7 +43,18 @@ export const authApi = api.injectEndpoints({
       }),
     }),
 
-    verifySignup: builder.mutation<LoginResponse, VerifySignupInput>({
+    resendOtp: builder.mutation<
+      ResendSignupOTPResponse,
+      ResendSignupOTPPayload
+    >({
+      query: (body) => ({
+        url: "/auth/resendSignupOTP",
+        method: "POST",
+        body,
+      }),
+    }),
+
+    verifySignup: builder.mutation<LoginResponse, VerifySignupPayload>({
       query: (body) => ({
         url: "/auth/verifySignup",
         method: "POST",
@@ -73,5 +89,6 @@ export const {
   useLoginMutation,
   useRequestSignupMutation,
   useVerifySignupMutation,
+  useResendOtpMutation,
   useLogoutMutation,
 } = authApi;

@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { RegisterInput, RegisterPayload } from "../authSchema";
-import { requestSignupSchema } from "../authSchema";
+import type { SignupFormValues } from "../authFormSchemas";
+import { SignupFormSchema } from "../authFormSchemas";
 import { Input } from "@/components/ui/input";
 import GoogleIcon from "@/components/google-icon";
 import {
@@ -23,12 +23,12 @@ export default function SignUpForm() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<RegisterInput>({
-    resolver: zodResolver(requestSignupSchema),
+  } = useForm<SignupFormValues>({
+    resolver: zodResolver(SignupFormSchema),
     defaultValues: {},
   });
 
-  const onSubmit = async (data: RegisterPayload) => {
+  const onSubmit = async (data: SignupFormValues) => {
     try {
       const response = await requestSignup({
         email: data.email,
