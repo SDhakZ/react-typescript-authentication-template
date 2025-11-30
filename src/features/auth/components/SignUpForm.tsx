@@ -1,9 +1,8 @@
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { LoginInput } from "../authSchema";
-import { loginSchema } from "../authSchema";
+import type { RegisterInput, RegisterPayload } from "../authSchema";
+import { requestSignupSchema } from "../authSchema";
 import { Input } from "@/components/ui/input";
-import { useNavigate } from "react-router-dom";
 import GoogleIcon from "@/components/google-icon";
 import {
   Field,
@@ -13,43 +12,35 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useLoginMutation } from "../authApi";
-import { loginSuccess } from "../authSlice";
+import { useRequestSignupMutation } from "../authApi";
 import { useAppDispatch } from "@/hooks/hooks";
 import { toast } from "sonner";
-export default function LoginPage() {
-  const [login, { isLoading, error }] = useLoginMutation();
-  const navigate = useNavigate();
+import { requestSignupSuccess } from "../authSlice";
+export default function SignUpForm() {
+  const [requestSignup, { isLoading, error }] = useRequestSignupMutation();
   const dispatch = useAppDispatch();
   const {
-    control,
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginInput>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      rememberMe: false,
-    },
+  } = useForm<RegisterInput>({
+    resolver: zodResolver(requestSignupSchema),
+    defaultValues: {},
   });
 
-  const onSubmit = async (data: LoginInput) => {
+  const onSubmit = async (data: RegisterPayload) => {
     try {
-      const res = await login({
+      const response = await requestSignup({
         email: data.email,
+        name: data.name,
         password: data.password,
-        rememberMe: data.rememberMe,
       }).unwrap();
-      toast.success(
-        <span>
-          Successfully logged in as{" "}
-          <span className="text-sky-600 font-medium">{data.email}</span>
-        </span>
+      dispatch(
+        requestSignupSuccess({
+          email: response.data.email,
+          expiresIn: response.data.expiresIn,
+        })
       );
-
-      dispatch(loginSuccess(res.data.user));
-      navigate("/client-list");
     } catch (err) {
       let error = err as any;
       console.log("Login error:", error.data.message);
@@ -64,10 +55,15 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center p-6 bg-gray-900">
       <div className="w-full max-w-sm rounded-lg shadow p-6">
-        <h1 className="text-2xl font-semibold mb-4">Login</h1>
+        <h1 className="text-2xl font-semibold mb-4">Register</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <FieldGroup>
             <FieldSet>
+              <Field>
+                <FieldLabel htmlFor="name">Name</FieldLabel>
+                <Input id="name" type="text" {...register("name")} />
+                <FieldError>{errors.name?.message}</FieldError>
+              </Field>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input id="email" type="email" {...register("email")} />
@@ -83,26 +79,18 @@ export default function LoginPage() {
                 />
                 <FieldError>{errors.password?.message}</FieldError>
               </Field>
+              <Field>
+                <FieldLabel htmlFor="confirmPassword">
+                  Confirm Password
+                </FieldLabel>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  {...register("confirmPassword")}
+                />
+                <FieldError>{errors.confirmPassword?.message}</FieldError>
+              </Field>
             </FieldSet>
-
-            <Field orientation="horizontal">
-              <Controller
-                name="rememberMe"
-                control={control}
-                render={({ field }) => (
-                  <>
-                    <Checkbox
-                      id="rememberMe"
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                    <FieldLabel htmlFor="rememberMe" className="font-normal">
-                      Remember me
-                    </FieldLabel>
-                  </>
-                )}
-              />
-            </Field>
 
             {error && (
               <p className="text-red-500">
@@ -115,7 +103,7 @@ export default function LoginPage() {
                 disabled={isLoading}
                 className="mt-4 dark:text-white w-full dark:bg-[#7C3AED] dark:hover:bg-[#6B21A8] cursor-pointer"
               >
-                {isLoading ? "Loading..." : "Login"}
+                {isLoading ? "Loading..." : "Sign Up"}
               </Button>
             </div>
           </FieldGroup>
@@ -135,12 +123,12 @@ export default function LoginPage() {
             className="flex dark:text-white dark:hover:bg-[#272729] cursor-pointer gap-2 items-center dark:bg-[#131314] justify-center border px-4 py-5 rounded-md"
           >
             <GoogleIcon />
-            Sign in with Google
+            Sign up with Google
           </Button>
           <p className="text-center">
-            Dont have an account?{" "}
-            <a href="/signup" className="text-sky-600">
-              Register here
+            Already have an account?{" "}
+            <a href="/login" className="text-sky-600">
+              Login here
             </a>
           </p>
         </div>

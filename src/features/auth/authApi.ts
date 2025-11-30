@@ -1,5 +1,10 @@
 import { api } from "@/app/api/baseApi";
-import type { LoginInput, RegisterInput } from "./authSchema";
+import type {
+  LoginInput,
+  RegisterInput,
+  RegisterPayload,
+  VerifySignupInput,
+} from "./authSchema";
 import {
   type RegisterResponse,
   type LoginResponse,
@@ -25,12 +30,29 @@ export const authApi = api.injectEndpoints({
       },
     }),
 
-    register: builder.mutation<RegisterResponse, RegisterInput>({
+    requestSignup: builder.mutation<RegisterResponse, RegisterPayload>({
       query: (body) => ({
-        url: "/auth/register",
+        url: "/auth/requestSignup",
         method: "POST",
         body,
       }),
+    }),
+
+    verifySignup: builder.mutation<LoginResponse, VerifySignupInput>({
+      query: (body) => ({
+        url: "/auth/verifySignup",
+        method: "POST",
+        body,
+      }),
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          console.log("Signup verification successful", data);
+          sessionStorage.setItem("accessToken", data.accessToken);
+        } catch (error) {
+          console.error("Signup verification failed", error);
+        }
+      },
     }),
 
     logout: builder.mutation<LogoutResponse, void>({
@@ -47,4 +69,9 @@ export const authApi = api.injectEndpoints({
   }),
 });
 
-export const { useLoginMutation, useLogoutMutation } = authApi;
+export const {
+  useLoginMutation,
+  useRequestSignupMutation,
+  useVerifySignupMutation,
+  useLogoutMutation,
+} = authApi;

@@ -5,11 +5,21 @@ import type { User } from "@/types/user";
 interface AuthState {
   isAuthenticated: boolean;
   user: User | null;
+  signup: {
+    step: "idle" | "otp" | "verified";
+    email: string | null;
+    expiresAt?: number;
+  };
 }
 
 const initialState: AuthState = {
   isAuthenticated: false,
   user: null,
+  signup: {
+    step: "idle",
+    email: null,
+    expiresAt: undefined,
+  },
 };
 
 const authSlice = createSlice({
@@ -22,7 +32,21 @@ const authSlice = createSlice({
         state.user = action.payload;
       }
     },
-
+    requestSignupSuccess: (
+      state,
+      action: PayloadAction<{ email: string; expiresIn: number }>
+    ) => {
+      state.signup.step = "otp";
+      state.signup.email = action.payload.email;
+      state.signup.expiresAt = Date.now() + action.payload.expiresIn * 1000;
+    },
+    verifySignupSuccess: (state, action: PayloadAction<{ user: User }>) => {
+      state.isAuthenticated = true;
+      state.user = action.payload.user;
+      state.signup.step = "verified";
+      state.signup.email = null;
+      state.signup.expiresAt = undefined;
+    },
     logoutSuccess: (state) => {
       state.isAuthenticated = false;
       state.user = null;
@@ -31,5 +55,10 @@ const authSlice = createSlice({
   },
 });
 
-export const { loginSuccess, logoutSuccess } = authSlice.actions;
+export const {
+  loginSuccess,
+  logoutSuccess,
+  requestSignupSuccess,
+  verifySignupSuccess,
+} = authSlice.actions;
 export default authSlice.reducer;

@@ -46,18 +46,31 @@ export function AppSidebar() {
           {open && (
             <SidebarHeader>
               <NavLink to="/">
-                <h1 className="text-lg font-semibold">Automation</h1>
+                <h1 className="text-xl font-semibold">ARCUS</h1>
               </NavLink>
             </SidebarHeader>
           )}
 
+          {!open && (
+            <SidebarHeader>
+              <NavLink to="/">
+                <div className="flex mt-1 items-center justify-center w-full h-auto">
+                  <img src="./icon.png" className="max-w-[26px]" />
+                </div>
+              </NavLink>
+            </SidebarHeader>
+          )}
+
+          {!open && <hr className="mt-1.5" />}
+
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
+              {items.map((item, index) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
                     isActive={location.pathname.includes(item.url)}
+                    className={`${index === 0 && !open ? "mt-3" : "mt-5"}`}
                   >
                     <NavLink to={item.url}>
                       <item.icon />

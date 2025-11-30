@@ -9,8 +9,10 @@ export interface LoginResponse extends BaseResponse {
 }
 
 export interface RegisterResponse extends BaseResponse {
+  message: string;
   data: {
-    user: User;
+    email: string;
+    expiresIn: number;
   };
 }
 
